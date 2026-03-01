@@ -1,0 +1,127 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+<h1>Dashboard</h1>
+{%comment%}
+<div class="card border-info " style="max-width: 18rem; min-height: 8rem">
+    <div class="card-body text-primary">
+      <h3 class="card-title">Trace Network</h3>
+          <button type="button" class="btn btn-primary btn-sm" id="btn-show" onclick="startProcess()">
+              Start Scanning
+          </button>
+        <button type="button" class="btn btn-primary btn-sm" id="btn-hide" onclick="stopProcess()" style="display:none">
+            Stop Scanning
+        </button>
+        <h5 id="time-caption" style="display:none">Scanning...</h5>
+
+
+
+    </div>
+</div>
+
+<div id="counts-container">
+    {% for model, count in counts.items %}
+    <div class="module">
+        <table>
+            <caption>{{ model }}</caption>
+            <tr>
+                <th>Total Records</th>
+                <td class="count">{{ count }}</td>
+            </tr>
+        </table>
+    </div>
+    {% endfor %}
+</div>
+{%endcomment%}
+
+
+<script>
+    function getCookie(name) {
+        return document.cookie.split(';')
+            .find(c => c.trim().startsWith(name + '='))
+            ?.split('=')[1]
+    }
+
+    function startProcess() {
+        fetch('/run-process/', {
+            method: 'POST',
+            headers: {'X-CSRFToken': getCookie('csrftoken')},
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('btn-start').style.display = 'none'
+            document.getElementById('btn-stop').style.display = 'block'
+        })
+    }
+
+    function stopProcess() {
+        fetch('/stop-process/', {
+            method: 'POST',
+            headers: {'X-CSRFToken': getCookie('csrftoken')},
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('btn-start').style.display = 'block'
+            document.getElementById('btn-stop').style.display = 'none'
+        })
+    }
+</script>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scanner</title>
+    <style>
+        body { font-family: sans-serif; padding: 2rem; }
+        button { padding: 0.6rem 1.4rem; font-size: 1rem; margin-right: 1rem; cursor: pointer; }
+        #startBtn { background: #28a745; color: white; border: none; border-radius: 4px; }
+        #stopBtn  { background: #dc3545; color: white; border: none; border-radius: 4px; }
+        #status   { margin-top: 1rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>Scanner</h2>
+    <button id="startBtn" onclick="startProgram()">▶ Start</button>
+    <button id="stopBtn"  onclick="stopProgram()">■ Stop</button>
+    <p id="status">Status: idle</p>
+
+    <script>
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        async function startProgram() {
+            const res = await fetch("/start/", {
+                method: "POST",
+                headers: { "X-CSRFToken": getCookie("csrftoken") },
+            });
+            const data = await res.json();
+            const msg = {
+                started: "✅ Running",
+                already_running: "⚠️ Already running",
+            };
+            document.getElementById("status").textContent = "Status: " + (msg[data.status] ?? data.status);
+        }
+
+        async function stopProgram() {
+            const res = await fetch("/stop/", {
+                method: "POST",
+                headers: { "X-CSRFToken": getCookie("csrftoken") },
+            });
+            const data = await res.json();
+            const msg = {
+                stopped: "🛑 Stopped",
+                not_running: "⚠️ Not running",
+            };
+            document.getElementById("status").textContent = "Status: " + (msg[data.status] ?? data.status);
+        }
+    </script>
+</body>
+</html>
+{% endblock %}
+
+
