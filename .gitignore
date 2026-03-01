@@ -8,7 +8,8 @@ __pycache__/
 #media files
 media/
 #Migrations files
-*/migrations/[0-9]*.py
+core/*/migrations/[0-9]*.py
+
 # Distribution / packaging
 .Python
 build/
