@@ -743,16 +743,39 @@ class BitTorrentSniffer:
         except Exception as e:
             pass
 
+    def catching_all_piece(self, packet):
+        try:
+            if not packet.haslayer(TCP):
+                return
+            if not packet.haslayer(Raw):
+                return
+
+            payload = bytes(packet[Raw].load)
+
+            if len(payload) == 0:
+                return
+
+        except:
+            pass
+
 
 def main():
     sniffer = BitTorrentSniffer()
     bpf_filter = "udp or tcp"
-
+    is_pcap = True
     try:
-        sniff(
-            filter=bpf_filter,
-            prn=sniffer.analyze_packet,
-            store=0
-        )
+        if is_pcap:
+            pcap_file = "adele.pcap"
+            sniff(
+                offline=pcap_file,
+                prn=sniffer.analyze_packet,
+                store=0
+            )
+        else:
+            sniff(
+                filter=bpf_filter,
+                prn=sniffer.analyze_packet,
+                store=0
+            )
     except KeyboardInterrupt:
         print("\n\nStopping capture...")
