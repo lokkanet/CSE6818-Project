@@ -171,9 +171,12 @@ cython_debug/
 *.txt
 !requirements.txt
 
-.torrent
-.pcap
-.bin
-.mp3
+*.torrent
+*.pcap
+*.bin
+*.mp3
+
+
+
 
 

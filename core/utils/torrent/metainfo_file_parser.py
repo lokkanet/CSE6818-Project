@@ -9,16 +9,19 @@ import requests
 
 def download_file(info_hash):
     file_name = None
+
     try:
         with requests.get(f"https://itorrents.org/torrent/{info_hash}.torrent") as response:
             response.raise_for_status()
             with open(f"{info_hash}.torrent", 'wb') as file:
                 file.write(response.content)
+                file_name = f"{info_hash}.torrent"
     except Exception as e:
         pass
+    print(file_name)
     return file_name
 
-
+# download_file("8d8af236929ab41aa6f341c0aa62e4afbe33c85d")
 def parse_meta_info(file_path):
     with open(f"{file_path}", "rb") as f:
         torrent = bencodepy.decode(f.read())
