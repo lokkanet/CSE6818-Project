@@ -12,5 +12,6 @@ pip install -r requirements.txt
 ## Run
 
 ```shell
+cd bt_analyzer
 python main.py [pcap file path]
 ```

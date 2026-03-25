@@ -175,8 +175,8 @@ cython_debug/
 *.pcap
 *.bin
 *.mp3
-
-
+*/files/*
+*/pieces/*
 
 
 
