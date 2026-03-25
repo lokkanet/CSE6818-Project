@@ -1,6 +1,16 @@
-### BitTorrent Copyright Infringement Investigation
+# BitTorrent Copyright Infringement Investigation
 ### A Project on P2P Protocol Forensic Analysis
 
 
-This project is for the course of 
-##### CSE 6818 - Digital Forensics.
+
+## Project Setup
+
+```shell
+pip install -r requirements.txt
+```
+
+## Run
+
+```shell
+python main.py [pcap file path]
+```
